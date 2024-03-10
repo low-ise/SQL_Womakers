@@ -1,10 +1,12 @@
 import sqlite3
+import random as rd
 
 conexao = sqlite3.connect('banco-exercicio-sql')
 cursor = conexao.cursor()
 
 # 1. Crie uma tabela chamada "alunos" com os seguintes campos: id (inteiro), nome (texto), idade (inteiro) e curso (texto).
 cursor.execute('CREATE TABLE alunos(id INT, nome VARCHAR(100), idade INT, curso VARCHAR(100))')
+
 
 # 2. Insira pelo menos 5 registros de alunos na tabela que você criou no exercício anterior.
 
@@ -112,6 +114,30 @@ finally:
 
 # 5. Criar uma Tabela e Inserir Dados: Crie uma tabela chamada "clientes" com os campos: id (chave primária), nome (texto), idade (inteiro) e saldo (float). Insira alguns registros de clientes na tabela.
 
+cria_tabela = 'CREATE TABLE clientes(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nome VARCHAR(100) NOT NULL, idade INT, saldo FLOAT(10,4) NOT NULL);'
+
+lista_clientes = [
+    ("Chris", 42, 8540.546),
+    ("Sandra", 65, 9468.21),
+    ("Mariana", 25, 5248.452),
+    ("Carolina", 50, 12654.854),
+    ("Beatriz", 40, 508.360),
+    ("Luiza", 35, 899.415),
+    ("Débora", 39, 2224.4089),
+    ("Nayara", 46, 5008.1543),
+    ("Catarina", 53, 652.1547),
+    ("Joana", 28, 992.4568),
+    ]
+
+## Cria a tabela, insere os registros e fecha a conexão:
+try:
+    cursor.execute(cria_tabela)
+    cursor.executemany('INSERT INTO clientes(nome, idade, saldo) VALUES (?, ?, ?);', lista_clientes)
+    conexao.commit()
+except sqlite3.Error as e:
+    print("Não foi possível inserir os registros:", e)
+finally:
+    conexao.close()
 
 
 # 6. Consultas e Funções Agregadas: Escreva consultas SQL para realizar as seguintes tarefas:
