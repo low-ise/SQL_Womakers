@@ -181,9 +181,40 @@ finally:
     conexao.close()
 
 # 7. Atualização e Remoção com Condições
-## a) Atualize o saldo de um cliente específico.
-## b) Remova um cliente pelo seu ID.
 
+## Letra a)
+a = "Atualize o saldo de um cliente específico:\nAtualiza o saldo do registo com id = 6 para 1024,003"
+atualiza_saldo = 'UPDATE clientes SET saldo=1024.003 WHERE nome=(SELECT nome FROM clientes WHERE id=6);'
+
+## Letra b)
+
+b = "Remova um cliente pelo seu ID:\nRemove o registro com id = 9"
+remove_cliente = 'DELETE FROM clientes WHERE id=9;'
+
+## Exibe resultado:
+c = "Resultado:"
+
+letra_selecao = [a, b, c]
+
+queries = [atualiza_saldo,
+           remove_cliente,
+           'SELECT * FROM clientes']
+
+try:
+    for selecao in range(len(queries)):
+        query = queries[selecao]
+        dados_query = cursor.execute(query)
+        print("\n>",letra_selecao[selecao])
+
+        for cliente in dados_query:
+            print(cliente)
+
+        conexao.commit()
+
+except sqlite3.Error as e:
+    print("Não foi possível concluir a requisição:", e)
+finally:
+    conexao.close()
 
 
 # 8. Junção de Tabelas: Crie uma segunda tabela chamada "compras" com os campos: id (chave primária), cliente_id (chave estrangeira referenciando o id da tabela "clientes"), produto (texto) e valor (real).
