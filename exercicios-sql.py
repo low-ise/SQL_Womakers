@@ -141,12 +141,44 @@ finally:
 
 
 # 6. Consultas e Funções Agregadas: Escreva consultas SQL para realizar as seguintes tarefas:
-## a) Selecione o nome e a idade dos clientes com idade superior a 30 anos.
-## b) Calcule o saldo médio dos clientes.
-## c) Encontre o cliente com o saldo máximo.
-## d) Conte quantos clientes têm saldo acima de 1000.
+## Letra a)
+a = "Selecione o nome e a idade dos clientes com idade superior a 30 anos"
+nome_idade_mais_30 = 'SELECT nome, idade FROM clientes WHERE idade>30;'
 
+## Letra b)
+b = "Calcule o saldo médio dos clientes"
+saldo_medio = 'SELECT AVG(saldo) FROM clientes;'
 
+## Letra c)
+c = "Encontre o cliente com o saldo máximo"
+cliente_saldo_max = 'SELECT * FROM clientes WHERE saldo=(SELECT MAX(saldo) FROM clientes);'
+
+## Letra d)
+d = "Conte quantos clientes têm saldo acima de 1000"
+clientes_saldo_mais_1000 = 'SELECT COUNT(id) FROM clientes WHERE saldo>1000'
+
+letra_selecao = [a, b, c, d]
+
+queries = [nome_idade_mais_30,
+           saldo_medio,
+           cliente_saldo_max,
+           clientes_saldo_mais_1000]
+
+## Executa as queries e fecha a conexão
+try:
+    for selecao in range(len(queries)):
+        query = queries[selecao]
+        dados_query = cursor.execute(query)
+        print("\n>",letra_selecao[selecao])
+
+        for cliente in dados_query:
+            print(cliente)
+
+        conexao.commit()
+except sqlite3.Error as e:
+    print("Não foi possível concluir a requisição:", e)
+finally:
+    conexao.close()
 
 # 7. Atualização e Remoção com Condições
 ## a) Atualize o saldo de um cliente específico.
