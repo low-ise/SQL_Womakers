@@ -74,9 +74,40 @@ finally:
 
 
 # 4. Atualização e Remoção
-## a) Atualize a idade de um aluno específico na tabela.
-## b) Remova um aluno pelo seu ID.
+## Letra a)
 
+a = "Atualize a idade de um aluno específico na tabela:\nAtualiza a idade do registo com id = 1 para 19 anos"
+atualiza_idade = 'UPDATE alunos SET idade=19 WHERE nome=(SELECT nome FROM alunos WHERE id=1);'
+
+## Letra b)
+
+b = "Remova um aluno pelo seu ID:\nRemove o registro com id = 10"
+remove_aluno = 'DELETE FROM alunos WHERE id=10;'
+
+## Exibe resultado:
+c = "Resultado:"
+
+letra_selecao = [a, b, c]
+
+queries = [atualiza_idade,
+           remove_aluno,
+           'SELECT * FROM alunos']
+
+try:
+    for selecao in range(len(queries)):
+        query = queries[selecao]
+        dados_query = cursor.execute(query)
+        print("\n>",letra_selecao[selecao])
+
+        for aluno in dados_query:
+            print(aluno)
+
+        conexao.commit()
+
+except sqlite3.Error as e:
+    print("Não foi possível concluir a requisição:", e)
+finally:
+    conexao.close()
 
 
 # 5. Criar uma Tabela e Inserir Dados: Crie uma tabela chamada "clientes" com os campos: id (chave primária), nome (texto), idade (inteiro) e saldo (float). Insira alguns registros de clientes na tabela.
