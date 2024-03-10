@@ -24,7 +24,7 @@ lista_alunas = [
 
 ## Insere os registros e fecha a conexão:
 try:
-    cursor.executemany('INSERT INTO alunos(id, nome, idade, curso) VALUES (?, ?, ?, ?)', lista_alunas)
+    cursor.executemany('INSERT INTO alunos(id, nome, idade, curso) VALUES (?, ?, ?, ?);', lista_alunas)
     conexao.commit()
 except sqlite3.Error as e:
     print("Não foi possível inserir os registros:", e)
@@ -33,11 +33,44 @@ finally:
 
 
 # 3. Consultas Básicas: Escreva consultas SQL para realizar as seguintes tarefas:
-## a) Selecionar todos os registros da tabela "alunos".
-## b) Selecionar o nome e a idade dos alunos com mais de 20 anos.
-## c) Selecionar os alunos do curso de "Engenharia" em ordem alfabética.
-## d) Contar o número total de alunos na tabela
+## Letra a)
+a = "Selecionar todos os registros da tabela \"alunos\""
+todos_registros = 'SELECT * FROM alunos;'
 
+## Letra b)
+b = "Selecionar o nome e a idade dos alunos com mais de 20 anos"
+nome_idade_mais_20 = 'SELECT nome, idade FROM alunos WHERE idade>20;'
+
+## Letra c)
+c = "Selecionar os alunos do curso de \"Engenharia\" em ordem alfabética"
+alunas_engenharia = 'SELECT * FROM alunos WHERE curso="Engenharia" ORDER BY nome;'
+
+## Letra d
+d = "Contar o número total de alunos na tabela"
+total_alunas = 'SELECT COUNT(id) FROM alunos;'
+
+# Lista de queries
+queries = [todos_registros,
+           nome_idade_mais_20,
+           alunas_engenharia,
+           total_alunas]
+
+letra_selecao = [a, b, c, d]
+try:
+    for selecao in range(len(queries)):
+        query = queries[selecao]
+        dados_query = cursor.execute(query)
+
+        print("\n",letra_selecao[selecao])
+
+        for aluno in dados_query:
+            print(aluno)
+
+        conexao.commit()
+except sqlite3.Error as e:
+    print("Não foi possível concluir a requisição:", e)
+finally:
+    conexao.close()
 
 
 # 4. Atualização e Remoção
