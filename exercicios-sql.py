@@ -4,7 +4,7 @@ conexao = sqlite3.connect('banco-exercicio-sql')
 cursor = conexao.cursor()
 
 # 1. Crie uma tabela chamada "alunos" com os seguintes campos: id (inteiro), nome (texto), idade (inteiro) e curso (texto).
-cursor.execute('CREATE TABLE alunos(id INT, nome VARCHAR(100), idade INT curso VARCHAR(100))')
+cursor.execute('CREATE TABLE alunos(id INT, nome VARCHAR(100), idade INT, curso VARCHAR(100))')
 
 # 2. Insira pelo menos 5 registros de alunos na tabela que você criou no exercício anterior.
 
@@ -47,7 +47,7 @@ cursor.execute('CREATE TABLE alunos(id INT, nome VARCHAR(100), idade INT curso V
 # Escreva uma consulta para exibir o nome do cliente, o produto e o valor de cada compra.
 
 
-#cursor.execute('')
+cursor.execute('')
 
 conexao.commit()
 conexao.close()
