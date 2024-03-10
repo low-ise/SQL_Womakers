@@ -8,6 +8,28 @@ cursor.execute('CREATE TABLE alunos(id INT, nome VARCHAR(100), idade INT, curso 
 
 # 2. Insira pelo menos 5 registros de alunos na tabela que você criou no exercício anterior.
 
+## Cria lista de registros para inserção:
+lista_alunas = [
+    (1, "Ana", 20, "Psicologia"),
+    (2, "Carina", 32, "Química"),
+    (3, "Maria", 26, "Artes Visuais"),
+    (4, "Helena", 17, "Matemática"),
+    (5, "Jennifer", 18, "Direito"),
+    (6, "Melissa", 23, "Engenharia"),
+    (7, "Sônia", 28, "Engenharia"),
+    (8, "Alessandra", 31, "Engenharia"),
+    (9, "Gabriela", 19, "Engenharia"),
+    (10, "Teresa", 18, "Engenharia"),
+    ]
+
+## Insere os registros e fecha a conexão:
+try:
+    cursor.executemany('INSERT INTO alunos(id, nome, idade, curso) VALUES (?, ?, ?, ?)', lista_alunas)
+    conexao.commit()
+except sqlite3.Error as e:
+    print("Não foi possível inserir os registros:", e)
+finally:
+    conexao.close()
 
 
 # 3. Consultas Básicas: Escreva consultas SQL para realizar as seguintes tarefas:
@@ -45,9 +67,3 @@ cursor.execute('CREATE TABLE alunos(id INT, nome VARCHAR(100), idade INT, curso 
 # 8. Junção de Tabelas: Crie uma segunda tabela chamada "compras" com os campos: id (chave primária), cliente_id (chave estrangeira referenciando o id da tabela "clientes"), produto (texto) e valor (real).
 # Insira algumas compras associadas a clientes existentes na tabela "clientes".
 # Escreva uma consulta para exibir o nome do cliente, o produto e o valor de cada compra.
-
-
-cursor.execute('')
-
-conexao.commit()
-conexao.close()
