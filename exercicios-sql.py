@@ -1,8 +1,8 @@
 import sqlite3
-import random as rd
 
 conexao = sqlite3.connect('banco-exercicio-sql')
 cursor = conexao.cursor()
+
 
 # 1. Crie uma tabela chamada "alunos" com os seguintes campos: id (inteiro), nome (texto), idade (inteiro) e curso (texto).
 cursor.execute('CREATE TABLE alunos(id INT, nome VARCHAR(100), idade INT, curso VARCHAR(100))')
@@ -24,14 +24,12 @@ lista_alunas = [
     (10, "Teresa", 18, "Engenharia"),
     ]
 
-## Insere os registros e fecha a conexão:
+## Insere os registros:
 try:
     cursor.executemany('INSERT INTO alunos(id, nome, idade, curso) VALUES (?, ?, ?, ?);', lista_alunas)
     conexao.commit()
 except sqlite3.Error as e:
     print("Não foi possível inserir os registros:", e)
-finally:
-    conexao.close()
 
 
 # 3. Consultas Básicas: Escreva consultas SQL para realizar as seguintes tarefas:
@@ -71,22 +69,18 @@ try:
         conexao.commit()
 except sqlite3.Error as e:
     print("Não foi possível concluir a requisição:", e)
-finally:
-    conexao.close()
 
 
 # 4. Atualização e Remoção
 ## Letra a)
-
 a = "Atualize a idade de um aluno específico na tabela:\nAtualiza a idade do registo com id = 1 para 19 anos"
 atualiza_idade = 'UPDATE alunos SET idade=19 WHERE nome=(SELECT nome FROM alunos WHERE id=1);'
 
 ## Letra b)
-
 b = "Remova um aluno pelo seu ID:\nRemove o registro com id = 10"
 remove_aluno = 'DELETE FROM alunos WHERE id=10;'
 
-## Exibe resultado:
+## Checagem do resultado:
 c = "Resultado:"
 
 letra_selecao = [a, b, c]
@@ -95,6 +89,7 @@ queries = [atualiza_idade,
            remove_aluno,
            'SELECT * FROM alunos']
 
+# Execução das queries:
 try:
     for selecao in range(len(queries)):
         query = queries[selecao]
@@ -108,13 +103,10 @@ try:
 
 except sqlite3.Error as e:
     print("Não foi possível concluir a requisição:", e)
-finally:
-    conexao.close()
 
 
 # 5. Criar uma Tabela e Inserir Dados: Crie uma tabela chamada "clientes" com os campos: id (chave primária), nome (texto), idade (inteiro) e saldo (float). Insira alguns registros de clientes na tabela.
-
-cria_tabela = 'CREATE TABLE clientes(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nome VARCHAR(100) NOT NULL, idade INT, saldo FLOAT(10,4) NOT NULL);'
+cria_tabela = 'CREATE TABLE clientes(id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, nome VARCHAR(100) NOT NULL, idade INT, saldo FLOAT(10,4) NOT NULL);'
 
 lista_clientes = [
     ("Chris", 42, 8540.546),
@@ -136,8 +128,6 @@ try:
     conexao.commit()
 except sqlite3.Error as e:
     print("Não foi possível inserir os registros:", e)
-finally:
-    conexao.close()
 
 
 # 6. Consultas e Funções Agregadas: Escreva consultas SQL para realizar as seguintes tarefas:
@@ -177,11 +167,10 @@ try:
         conexao.commit()
 except sqlite3.Error as e:
     print("Não foi possível concluir a requisição:", e)
-finally:
-    conexao.close()
+
 
 # 7. Atualização e Remoção com Condições
-
+ 
 ## Letra a)
 a = "Atualize o saldo de um cliente específico:\nAtualiza o saldo do registo com id = 6 para 1024,003"
 atualiza_saldo = 'UPDATE clientes SET saldo=1024.003 WHERE nome=(SELECT nome FROM clientes WHERE id=6);'
@@ -193,12 +182,13 @@ remove_cliente = 'DELETE FROM clientes WHERE id=9;'
 
 ## Exibe resultado:
 c = "Resultado:"
+resultado = 'SELECT * FROM clientes'
 
 letra_selecao = [a, b, c]
 
 queries = [atualiza_saldo,
            remove_cliente,
-           'SELECT * FROM clientes']
+           resultado]
 
 try:
     for selecao in range(len(queries)):
@@ -213,10 +203,46 @@ try:
 
 except sqlite3.Error as e:
     print("Não foi possível concluir a requisição:", e)
-finally:
-    conexao.close()
 
 
 # 8. Junção de Tabelas: Crie uma segunda tabela chamada "compras" com os campos: id (chave primária), cliente_id (chave estrangeira referenciando o id da tabela "clientes"), produto (texto) e valor (real).
+cria_tabela = 'CREATE TABLE compras(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, cliente_id INTEGER UNIQUE NOT NULL, produto VARCHAR(100) NOT NULL, valor NUMERIC(10,4) NOT NULL, FOREIGN KEY (cliente_id) REFERENCES clientes(id));'
+
+try:
+    cursor.execute(cria_tabela)
+    conexao.commit()
+except sqlite3.Error as e:
+    print("Não foi possível inserir os registros:", e)
+
 # Insira algumas compras associadas a clientes existentes na tabela "clientes".
+lista_compras = [
+    (1, "Smartphone", 2250.00),
+    (2, "Panela de pressão", 230.00),
+    (3, "Mousepad", 55.00),
+    (5, "Tênis", 210.00),
+    (6, "Toalha de banho", 134.00),
+    (4, "Chaleira", 180.00),
+    (8, "Caixa de som", 407.00),
+    (7, "Flores", 30.00),
+    (10, "Sofá", 4000.00),
+    ]
+
+try:
+    cursor.executemany('INSERT INTO compras(cliente_id, produto, valor) VALUES (?, ?, ?);', lista_compras)
+    conexao.commit()
+except sqlite3.Error as e:
+    print("Não foi possível inserir os registros:", e)
+
 # Escreva uma consulta para exibir o nome do cliente, o produto e o valor de cada compra.
+consulta_compra_cliente = 'SELECT clientes.nome, compras.produto, compras.valor FROM clientes INNER JOIN compras ON clientes.id = compras.cliente_id'
+
+try:
+    dados = cursor.execute(consulta_compra_cliente)
+    conexao.commit()
+except sqlite3.Error as e:
+    print("Não foi possível executar a consulta:", e)
+finally:
+    for dado in dados:
+        print(dado)
+
+conexao.close()
